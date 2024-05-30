@@ -1,0 +1,17 @@
+.ab-feature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    text-align: center;
+
+    gap: 12px;
+    padding: 16px;
+    &__image {
+        width: 150px;
+        border: 10px solid #00bc77;
+        border-radius: 50%;
+        padding: 1rem;
+        margin-bottom: 24px;
+    }
+}
