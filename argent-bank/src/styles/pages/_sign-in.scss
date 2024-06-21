@@ -1,8 +1,56 @@
 .ab-sign-in {
     display: flex;
+    align-items: center;
+    justify-content: center;
     flex-direction: column;
     height: calc(100vh - 70px);
     width: 100vw;
+    padding: 32px;
+    background-color: #12002b;
+    &__container {
+        width: 50%;
+        background: white;
+        padding: 32px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    &__head {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 8px;
 
-    background-color: #002416;
+        svg {
+            width: 30px;
+        }
+        span {
+            font-size: 32px;
+            font-weight: 600;
+        }
+
+        margin-bottom: 32px;
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+
+        label {
+            font-weight: 600;
+        }
+        
+    }
+    &__btn {
+        margin-top: 16px;
+    }
+
+    &__rme {
+        display: flex;
+        gap: 4px;
+    }
 }

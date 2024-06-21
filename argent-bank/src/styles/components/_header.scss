@@ -12,15 +12,28 @@
         }
     }
 
-    &__sign-in {
+    &__user {
         display: flex;
-        align-content: center;
+        align-items: center;
+        gap: 24px;
+    }
+
+    &__sign-in-out, &__user-name {
+        display: flex;
+        align-items: center;
         justify-content: center;
         gap: 6px; 
         color: black;
+        font-size: 18px;
+        font-weight: 500;
+        transition: .25s ease all;
+        border: none;
+        outline: none;
+        background: transparent;
+        cursor: pointer;
 
         svg { width: 18px; transition: .25s ease all;}
-        transition: .25s ease all;
+
         &:hover {
             svg {
                 fill: $primary-dark;

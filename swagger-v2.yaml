@@ -1,0 +1,165 @@
+swagger: '2.0'
+info:
+  title: Bank Argent API documentation
+  description: Contains new available API endpoints for User Transactions
+  version: '1.0.0'
+  termsOfService: 'http://swagger.io/terms/'
+host: localhost:3001
+basePath: /api/v2
+schemes:
+  - http
+paths:
+  /user/transactions:
+   post:
+      security:
+        - Bearer: []
+      tags: 
+        - User Module
+      summary: User Transactions
+      description: Get transactions for a user
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: User transactions retrieved successully
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Transaction'
+        '404':
+          description: User Not Found
+        '500':
+          description: Internal Server Error
+  /user/transactions/lastmonth:
+   post:
+      security:
+        - Bearer: []
+      tags: 
+        - User Module
+      summary: Last month Transactions
+      description: Get last month transactions for a user
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: User transactions retrieved successully
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Transaction'
+        '404':
+          description: User Not Found
+        '500':
+          description: Internal Server Error
+  /transaction/{userId}:
+   put: # difference avec patch qui permet de mettre à jour que ce que l'on veut changer
+      security:
+        - Bearer: []
+      tags:
+        - Transaction Module
+      summary: Transaction API
+      description: API for updating a transaction detail
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: integer
+          format: int64
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+        - in: body
+          name: body
+          description: Update transaction category, and notes
+          required: true
+          schema:
+            $ref: '#/definitions/TransactionUpdate'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Transaction updated successully
+          schema:
+            $ref: '#/definitions/Transaction'
+        '404':
+          description: User Not Found
+        '500':
+          description: Internal Server Error
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+definitions:
+  User:
+    properties:
+      email:
+        type: string
+        description: user email
+      password:
+        type: string
+        description: user password
+      firstName:
+        type: string
+        description: user first name
+      lastName:
+        type: string
+        description: user last name
+  Transaction:
+    type: object
+    properties:
+      name:
+        type: string
+        description: transaction name
+      amount:
+        type: number
+        description: transaction amount
+      balance:
+        type: number
+        description: transaction balance
+      description:
+        type: string
+        description: transaction description
+      date:
+        type: string
+        format: date-time
+        description: transaction date
+      type:
+        $ref: '#/definitions/TransactionType'
+      category:
+        $ref: '#/definitions/Category'
+      notes:
+        $ref: '#/definitions/Notes'
+  TransactionType:
+    type: object
+    properties:
+      name:
+        type: string
+  Category:
+    type: object
+    properties:
+      name:
+        type: string
+  Notes:
+    type: object
+    properties:
+      note:
+        type: string
+  TransactionUpdate:
+    type: object
+    properties:
+      category:
+        $ref: '#/definitions/Category'
+      notes:
+        $ref: '#/definitions/Notes'

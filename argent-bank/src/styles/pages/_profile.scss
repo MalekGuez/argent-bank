@@ -1,0 +1,104 @@
+.ab-profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: calc(100vh - 70px);
+    width: 100vw;
+    padding: 32px;
+    background-color: #12002b;
+    
+
+    &__title {
+        color: white;
+        margin: 20px 0;
+        text-align: center;
+    }
+
+    &__edit {
+        margin: 20px 0;
+    }
+
+    &__modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+
+        &-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        
+            input {
+              margin-bottom: 10px;
+              padding: 10px;
+              width: 100%;
+              border: 1px solid #ccc;
+              border-radius: 3px;
+    
+              font-size: 18px;
+            }
+        
+            .ab-profile__edit-save,
+            .ab-profile__edit-cancel {
+              margin: 5px;
+            }
+        }
+    }
+
+    &__accounts {
+        width: 100%;
+        margin: 20px 0;
+        display: flex;
+        flex-direction: column;
+        width: 80%;
+        gap: 32px;   
+    }
+
+    &__account {
+        width: 100%;
+        display: flex;
+
+        background: white;
+        padding: 24px;
+
+        &-info {
+            width: 60%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        &-title, &-balance {
+            font-size: 16px;
+            font-weight: normal;
+        }
+
+        &-amount {
+            font-size: 40px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        &-actions {
+            width: 40%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        &-btn {
+            width: 250px;
+        }
+    }
+}
