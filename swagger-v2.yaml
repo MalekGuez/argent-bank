@@ -9,7 +9,7 @@ basePath: /api/v2
 schemes:
   - http
 paths:
-  /user/transactions:
+  /user/{userId}/transactions:
    post:
       security:
         - Bearer: []
@@ -18,6 +18,11 @@ paths:
       summary: User Transactions
       description: Get transactions for a user
       parameters:
+        - in: path
+          name: userId
+          required: true
+          type: integer
+          format: int64
         - in: header
           name: Authorization
           description: Attach Bearer JWT token
@@ -35,7 +40,7 @@ paths:
           description: User Not Found
         '500':
           description: Internal Server Error
-  /user/transactions/lastmonth:
+  /user/{userId}/transactions/lastmonth:
    post:
       security:
         - Bearer: []
@@ -44,6 +49,11 @@ paths:
       summary: Last month Transactions
       description: Get last month transactions for a user
       parameters:
+        - in: path
+          name: userId
+          required: true
+          type: integer
+          format: int64
         - in: header
           name: Authorization
           description: Attach Bearer JWT token
@@ -61,7 +71,7 @@ paths:
           description: User Not Found
         '500':
           description: Internal Server Error
-  /transaction/{userId}:
+  /transaction/{transactionId}/{userId}:
    put: # difference avec patch qui permet de mettre à jour que ce que l'on veut changer
       security:
         - Bearer: []
@@ -71,6 +81,11 @@ paths:
       description: API for updating a transaction detail
       parameters:
         - name: userId
+          in: path
+          required: true
+          type: integer
+          format: int64
+        - name: transactionId
           in: path
           required: true
           type: integer
@@ -95,7 +110,7 @@ paths:
         '404':
           description: User Not Found
         '500':
-          description: Internal Server Error
+          description: Internal Server Error        
 securityDefinitions:
   Bearer:
     type: apiKey
