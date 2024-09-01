@@ -1,42 +1,44 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserProfile, updateUserName } from '../store/authSlice';
+import { updateUserNameSuccess } from '../store/authSlice';
 import { useNavigate } from 'react-router-dom';
+import { updateUserName } from '../services/signInService';
 
 const Profile = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const user = useSelector((state) => state.auth.user);
     const token = useSelector((state) => state.auth.token);
+    const user = useSelector((state) => state.auth.user);
+    const navigate = useNavigate();
+    const [errorMessage, setErrorMessage] = useState('');
     const [editMode, setEditMode] = useState(false);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
 
     useEffect(() => {
-        console.log("Token :", token); 
-        console.log("User :", user);
-        if (token) {
-            dispatch(fetchUserProfile(token));
-            console.log(user);
-        } else {
-            navigate('/login');
-        }
-    }, [token, dispatch, navigate]);
-
-    useEffect(() => {
         if (user) {
             setFirstName(user.firstName);
             setLastName(user.lastName);
+        } 
+        else {
+            navigate('/');
         }
-    }, [user]);
+    }, [user, navigate]);
 
     const handleEdit = () => {
         setEditMode(true);
     };
 
-    const handleSave = (e) => {
+    const handleSave = async (e) => {
         e.preventDefault();
-        dispatch(updateUserName(token, firstName, lastName));
+
+        const updateUser = await updateUserName(token, firstName, lastName);
+        if (updateUser.ok) {
+            const updateUserData = await updateUser.json();
+            dispatch(updateUserNameSuccess(updateUserData));
+        } else {
+            setErrorMessage("La modification a échoué.");
+        }
+
         setEditMode(false);
     };
 
@@ -64,6 +66,7 @@ const Profile = () => {
                                 onChange={(e) => setLastName(e.target.value)}
                                 placeholder="Last Name"
                             />
+                            {errorMessage && <div className="error">{errorMessage}</div>}
                             <button type="submit" className="ab-button ab-profile__edit-save">Save</button>
                             <button type="button" className="ab-button ab-profile__edit-cancel" onClick={handleClose}>Cancel</button>
                         </form>

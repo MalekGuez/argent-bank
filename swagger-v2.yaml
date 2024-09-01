@@ -9,7 +9,7 @@ basePath: /api/v2
 schemes:
   - http
 paths:
-  /user/{userId}/transactions:
+  /user/transactions:
    post:
       security:
         - Bearer: []
@@ -18,11 +18,6 @@ paths:
       summary: User Transactions
       description: Get transactions for a user
       parameters:
-        - in: path
-          name: userId
-          required: true
-          type: integer
-          format: int64
         - in: header
           name: Authorization
           description: Attach Bearer JWT token
@@ -40,75 +35,7 @@ paths:
           description: User Not Found
         '500':
           description: Internal Server Error
-  /user/{userId}/transactions/lastmonth:
-   post:
-      security:
-        - Bearer: []
-      tags: 
-        - User Module
-      summary: Last month Transactions
-      description: Get last month transactions for a user
-      parameters:
-        - in: path
-          name: userId
-          required: true
-          type: integer
-          format: int64
-        - in: header
-          name: Authorization
-          description: Attach Bearer JWT token
-          required: true
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: User transactions retrieved successully
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Transaction'
-        '404':
-          description: User Not Found
-        '500':
-          description: Internal Server Error
-  /transaction/{userId}:
-    post:
-      security:
-        - Bearer: []
-      tags:
-        - Transaction Module
-      summary: Transaction API
-      description: API for creating a transaction to a given user
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          type: integer
-          format: int64
-        - in: header
-          name: Authorization
-          description: Attach Bearer JWT token
-          required: true
-        - in: body
-          name: body
-          description: The transaction details to create
-          required: true
-          schema:
-            $ref: '#/definitions/Transaction'
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Transaction successully created
-          schema:
-            $ref: '#/definitions/Transaction'
-        '400':
-          description: Bad Request (e.g., missing or invalid parameters)
-        '404':
-          description: User Not Found
-        '500':
-          description: Internal Server Error   
-  /transaction/{transactionId}/{userId}:
+  /transaction/{transactionId}:
     put: # difference avec patch qui permet de mettre à jour que ce que l'on veut changer
       security:
         - Bearer: []
@@ -117,11 +44,6 @@ paths:
       summary: Transaction API
       description: API for updating a transaction detail
       parameters:
-        - name: userId
-          in: path
-          required: true
-          type: integer
-          format: int64
         - name: transactionId
           in: path
           required: true
@@ -146,37 +68,6 @@ paths:
             $ref: '#/definitions/Transaction'
         '404':
           description: User Not Found
-        '500':
-          description: Internal Server Error   
-    delete:
-      security:
-        - Bearer: []
-      tags:
-        - Transaction Module
-      summary: Transaction API
-      description: API for deleting a transaction
-      parameters:
-        - in: path
-          name: userId
-          required: true
-          type: integer
-          format: int64
-        - in: path
-          name: transactionId
-          required: true
-          type: integer
-          format: int64
-        - in: header
-          name: Authorization
-          description: Attach Bearer JWT token
-          required: true
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Transaction deleted successfully
-        '404':
-          description: Transaction or User Not Found
         '500':
           description: Internal Server Error
 securityDefinitions:
@@ -219,30 +110,20 @@ definitions:
         format: date-time
         description: transaction date
       type:
-        $ref: '#/definitions/TransactionType'
+        type: 'string'
+        description: transaction type
       category:
-        $ref: '#/definitions/Category'
+        type: 'string'
+        description: transaction category
       notes:
-        $ref: '#/definitions/Notes'
-  TransactionType:
-    type: object
-    properties:
-      name:
-        type: string
-  Category:
-    type: object
-    properties:
-      name:
-        type: string
-  Notes:
-    type: object
-    properties:
-      note:
-        type: string
+        type: 'string'
+        description: transaction notes
   TransactionUpdate:
     type: object
     properties:
       category:
-        $ref: '#/definitions/Category'
+        type: 'string'
+        description: transaction category
       notes:
-        $ref: '#/definitions/Notes'
+        type: 'string'
+        description: transaction notes

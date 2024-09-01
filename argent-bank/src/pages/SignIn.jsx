@@ -1,37 +1,43 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { loginSuccess, loginFailure } from '../store/authSlice';
+import { loginSuccess, fetchUserProfileSuccess } from '../store/authSlice';
+
+import { login, fetchUserProfile } from '../services/signInService';
 
 const SignIn = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const error = useSelector((state) => state.auth.error);
+    const [errorMessage, setErrorMessage] = useState('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
   
     const handleLogin = async (e) => {
-      e.preventDefault();
-  
+        e.preventDefault();
         try {
-            const response = await fetch('http://localhost:3001/api/v1/user/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email: username, password }),
-            });
-  
-            const data = await response.json();
-            if (response.ok) {
-                const token = data.body.token;
+            const loggedIn = await login(username, password);  
+            const loginData = await loggedIn.json();
+
+            if (loggedIn.ok) {
+                // Modification de l'état
+                const token = loginData.body.token;
                 dispatch(loginSuccess(token));
+
+                // Récupération de l'utilisateur + modification de l'état
+                const user = await fetchUserProfile(token);
+                if (user.ok) {
+                    const userData = await user.json();
+                    console.log(userData.body);
+                    dispatch(fetchUserProfileSuccess(userData.body));
+                } else {
+                    setErrorMessage("Aucun utilisateur n'a été trouvé.");
+                }
                 navigate('/profile');
             } else {
-                dispatch(loginFailure(data.message || 'Login failed'));
+                setErrorMessage("Nom d'utilisateur ou mot de passe incorrect.");
             }
         } catch (err) {
-            dispatch(loginFailure('An error occurred. Please try again.'));
+            console.log(err);
         }
     };
   
@@ -53,7 +59,7 @@ const SignIn = () => {
                     <input type="checkbox" id="remember-me" name="remember-me" />
                     <label htmlFor="remember-me">Remember me</label>
                 </div>
-                {error && <div className="error">{error}</div>}
+                {errorMessage && <div className="error">{errorMessage}</div>}
                 <button className="ab-button ab-sign-in__btn" type="submit">Sign In</button>
             </form>
         </div>
